@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { withStyles } from "@material-ui/core/styles";
 import { CSSProperties } from "@material-ui/styles";
 import { CustomTheme } from "../../style/theme";
@@ -36,11 +36,19 @@ interface OwnProps {
 type Props = OwnProps;
 
 export const CalculatorPage: React.FC<Props> = (props: Props) => {
+
   const { classes } = props;
 
   const [values, setValues] = useState<
     { [k in string]: { value: number; kcal: number } }
   >({});
+
+  const [resetBool, Reset] = useState<boolean>(true);
+
+  useEffect(() => {
+    for ( let itemName in Object.keys(values) ) setValues({});
+  }, [resetBool])
+
 
   const handleChange = (itemName: string, itemKcal: number) => (
     value: number
@@ -80,6 +88,9 @@ export const CalculatorPage: React.FC<Props> = (props: Props) => {
           <div className={classes.buttonContainer}>
             <Button variant="contained" onClick={sendData(result)}>
               {result} Kcal
+            </Button>
+            <Button variant="contained" onClick={() => Reset(!resetBool)}>
+              Reset
             </Button>
           </div>
         </div>
